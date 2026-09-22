@@ -77,7 +77,6 @@ const TopBar = ({ label }: { label: string }) => (
       gap: 36,
     }}
   >
-    {/* @slide-comment id="c-1b1b73e3" ts="2026-09-22T22:00:40.004Z" text="eyJub3RlIjoibWFrZSBpdCB0d2ljZSBhcyBsYXJnZSJ9" */}
     <img src={geoscimlLogo} alt="GeoSciML logo" style={{ width: 112, height: 'auto' }} />
     <div
       style={{
@@ -88,7 +87,6 @@ const TopBar = ({ label }: { label: string }) => (
         textTransform: 'uppercase',
       }}
     >
-      {/* @slide-comment id="c-9b1ff8bf" ts="2026-09-22T22:00:58.046Z" text="eyJub3RlIjoiYWRqdXN0IHRvIHRoZSBuZXcgaGVpZ2h0IG9mIHRoZSBsb2dvIn0" */}
       {label}
     </div>
   </div>
@@ -121,11 +119,12 @@ const Heading = ({ children }: { children: React.ReactNode }) => (
   <h2
     style={{
       fontFamily: 'var(--osd-font-display)',
-      fontSize: 72,
+      fontSize: 64,
       fontWeight: 500,
       letterSpacing: '-0.02em',
       lineHeight: 1.15,
       margin: '10px 0 0',
+      whiteSpace: 'nowrap',
     }}
   >
     {children}
@@ -147,14 +146,13 @@ const RepoBadge = ({ light }: { light?: boolean }) => (
       textDecoration: 'none',
     }}
   >
-    {/* @slide-comment id="c-cf722755" ts="2026-09-22T22:03:09.049Z" text="eyJub3RlIjoibG9nbyBhbmQgbGluayBzaG91bGQgYmUgdHdpY2UgYXMgbGFyZ2UifQ" */}
-    <svg width={46} height={46} viewBox="0 0 16 16" fill={light ? '#f2fbfd' : 'var(--osd-text)'}>
+    <svg width={92} height={92} viewBox="0 0 16 16" fill={light ? '#f2fbfd' : 'var(--osd-text)'}>
       <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
     </svg>
     <span
       style={{
         fontFamily: MONO,
-        fontSize: 26,
+        fontSize: 52,
         color: light ? '#f2fbfd' : 'var(--osd-text)',
       }}
     >
@@ -179,6 +177,7 @@ const Footer = () => {
         letterSpacing: '0.06em',
       }}
     >
+      {/* @slide-comment id="c-688e20cc" ts="2026-09-22T22:29:17.815Z" text="eyJub3RlIjoicmVtb3ZlIGZyb20gdGhlIHBhZ2UifQ" */}
       <span>GEOSCIML DISCUSSION GROUP · 24 SEP 2026</span>
       <span>
         {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
@@ -199,8 +198,131 @@ const Col = ({ children }: { children: React.ReactNode }) => (
 );
 
 const FigCaption = ({ children }: { children: React.ReactNode }) => (
-  <p style={{ fontSize: 24, lineHeight: 1.4, color: MUTED, margin: '12px 0 0' }}>{children}</p>
+  <p
+    style={{
+      fontSize: 22,
+      lineHeight: 1.4,
+      color: MUTED,
+      margin: '12px 0 0',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+    }}
+  >
+    {children}
+  </p>
 );
+
+const PageNumOnly = () => {
+  const { current, total } = useSlidePageNumber();
+  return (
+    <span
+      style={{
+        position: 'absolute',
+        right: 120,
+        bottom: 40,
+        fontFamily: MONO,
+        fontSize: 22,
+        color: 'var(--osd-accent)',
+        letterSpacing: '0.06em',
+      }}
+    >
+      {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
+    </span>
+  );
+};
+
+/* Minimal syntax highlighting for code blocks (no extra dependencies). */
+
+const HL_KEYWORD = '#7fd4ff';
+const HL_STRING = '#b8e986';
+const HL_COMMENT = '#5d8496';
+const HL_NUMBER = '#f0b6d0';
+const HL_DECOR = '#c2a8ff';
+const HL_BASE = TEAL_CY;
+
+const PY_KEYWORDS = new Set([
+  'class', 'def', 'return', 'if', 'isinstance', 'import', 'from', 'as', 'in', 'for',
+  'self', 'None', 'True', 'False', 'lambda', 'with', 'not', 'and', 'or', 'else', 'while',
+]);
+
+const highlightLine = (line: string) => {
+  // whole-line comment
+  const trimmed = line.trimStart();
+  if (trimmed.startsWith('#')) {
+    return <span style={{ color: HL_COMMENT }}>{line}</span>;
+  }
+  // split into tokens: strings, comments, words, numbers, everything else
+  const out: React.ReactNode[] = [];
+  let i = 0;
+  let key = 0;
+  const pushPlain = (txt: string) => {
+    if (txt) out.push(<span key={key++}>{txt}</span>);
+  };
+  while (i < line.length) {
+    const ch = line[i];
+    // comment start mid-line
+    if (ch === '#') {
+      out.push(
+        <span key={key++} style={{ color: HL_COMMENT }}>
+          {line.slice(i)}
+        </span>,
+      );
+      break;
+    }
+    // string literal
+    if (ch === '"' || ch === "'") {
+      let j = i + 1;
+      while (j < line.length && (line[j] !== ch || line[j - 1] === '\\')) j++;
+      // triple-quoted docstring start
+      if (line.slice(i, i + 3) === ch.repeat(3)) {
+        j = line.indexOf(ch.repeat(3), i + 3);
+        j = j === -1 ? line.length : j + 3;
+      } else {
+        j = j === line.length ? line.length : j + 1;
+      }
+      out.push(
+        <span key={key++} style={{ color: HL_STRING }}>
+          {line.slice(i, j)}
+        </span>,
+      );
+      i = j;
+      continue;
+    }
+    // word or number
+    if (/[A-Za-z0-9_]/.test(ch)) {
+      let j = i;
+      while (j < line.length && /[A-Za-z0-9_]/.test(line[j])) j++;
+      const word = line.slice(i, j);
+      if (PY_KEYWORDS.has(word)) {
+        out.push(
+          <span key={key++} style={{ color: HL_KEYWORD, fontWeight: 600 }}>
+            {word}
+          </span>,
+        );
+      } else if (/^[0-9]/.test(word) && /^[0-9][0-9a-zA-Z_.]*$/.test(word)) {
+        out.push(
+          <span key={key++} style={{ color: HL_NUMBER }}>
+            {word}
+          </span>,
+        );
+      } else if (word[0] >= 'A' && word[0] <= 'Z') {
+        // class-like names
+        out.push(
+          <span key={key++} style={{ color: HL_DECOR }}>
+            {word}
+          </span>,
+        );
+      } else {
+        pushPlain(word);
+      }
+      i = j;
+      continue;
+    }
+    pushPlain(ch);
+    i++;
+  }
+  return <span>{out}</span>;
+};
 
 const Code = ({ lines, title }: { lines: string[]; title?: string }) => (
   <div
@@ -211,7 +333,7 @@ const Code = ({ lines, title }: { lines: string[]; title?: string }) => (
       fontFamily: MONO,
       fontSize: 24,
       lineHeight: 1.45,
-      color: TEAL_CY,
+      color: HL_BASE,
     }}
   >
     {title ? (
@@ -220,7 +342,13 @@ const Code = ({ lines, title }: { lines: string[]; title?: string }) => (
       </div>
     ) : null}
     <pre style={{ margin: 0, whiteSpace: 'pre' }}>
-      {/* @slide-comment id="c-c1ed0a76" ts="2026-09-22T22:07:42.146Z" text="eyJub3RlIjoidXNlIHN5bnRheCBoaWdobGlnaHRpbmcgaGVyZSBhbmQgaW4gYWxsIHRoZSBmb2xsb3dpbmcgY29kZSBibG9ja3MgdG8gbWFrZSB0aGUgc2xpZGUgbW9yZSByZWFkYWJsZSJ9" */}{lines.join('\n')}</pre>
+      {lines.map((l, i) => (
+        <span key={i}>
+          {highlightLine(l)}
+          {i < lines.length - 1 ? '\n' : ''}
+        </span>
+      ))}
+    </pre>
   </div>
 );
 
@@ -376,10 +504,11 @@ const Cover: Page = () => (
         maxWidth: 1620,
       }}
     >
-      {/* @slide-comment id="c-11fa69b5" ts="2026-09-22T22:00:18.457Z" text="eyJub3RlIjoidXNlIHRoZSBzY2hlbWUgZ3JlZW4gZm9yIHRoZSB3b3JkIFwiZGlmZmVyZW50aWFibGVcIiJ9" */}
+      {/* @slide-comment id="c-5a62d708" ts="2026-09-22T22:28:58.409Z" text="eyJub3RlIjoiXCJkaWZmZXJlbnRpYWJsZVwiIGluIHRoZSBzY2hlbWUgYmx1ZSAoc2FtZSBhcyB0aXRsZSkifQ" */}
       ADDA
       <span style={{ fontSize: 44, color: MUTED, fontWeight: 400 }}> — </span>
-      end-to-end differentiable
+      end-to-end{' '}
+      <span style={{ color: '#1e9e5a' }}>differentiable</span>
       <br />
       data assimilation
     </h1>
@@ -394,11 +523,10 @@ const Cover: Page = () => (
         position: 'absolute',
         left: 120,
         bottom: 64,
-        fontSize: 30,
+        fontSize: 40,
         color: 'var(--osd-text)',
       }}
     >
-      {/* @slide-comment id="c-78da66be" ts="2026-09-22T22:01:10.528Z" text="eyJub3RlIjoidXNlIGxhcmdlciBmb250cyJ9" */}
       24 September 2026
     </div>
     <Footer />
@@ -408,7 +536,7 @@ const Cover: Page = () => (
 const Why: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="01" text="Motivation" />
-    <Heading>Data assimilation works — replaying it on new code doesn't</Heading>
+    <Heading>Data assimilation works — porting it doesn't</Heading>
     <div style={{ display: 'flex', gap: 56, marginTop: 48 }}>
       <div style={{ flex: 1 }}>
         <div
@@ -464,14 +592,17 @@ const DAFormulation: Page = () => (
         <EqBox
           tex="\mathbf{x}_{t+1} \;=\; \mathcal{M}(\mathbf{x}_t) + \boldsymbol{\epsilon}_t, \qquad \boldsymbol{\epsilon}_t \sim \mathcal{N}(0, \boldsymbol{\Sigma}_{\epsilon})"
           tag="state (1)"
+          size={30}
         />
         <EqBox
           tex="\mathbf{y}_t \;=\; \mathcal{H}_t(\mathbf{x}_t) + \boldsymbol{\eta}_t, \qquad \boldsymbol{\eta}_t \sim \mathcal{N}(0, \boldsymbol{\Sigma}_{\boldsymbol{\eta}_t})"
           tag="obs (2)"
+          size={30}
         />
         <EqBox
           tex="\mathbf{x}_0 \;\sim\; \mathcal{N}(\mathbf{x}^B, \boldsymbol{\Sigma}_B)"
           tag="prior (3)"
+          size={30}
         />
       </div>
       <div style={{ flex: 1 }}>
@@ -514,17 +645,19 @@ const DAFormulation: Page = () => (
 const Bayesian: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="03" text="Bayesian formulation" />
-    <Heading>The full answer is a posterior over trajectories</Heading>
+    <Heading>The answer is a posterior over trajectories</Heading>
     <Steps>
       <Step>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginTop: 40 }}>
           <EqBox
             tex="p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) \;=\; \frac{p(\mathbf{x}_{0:T})\, p(\mathbf{y}_{0:T} \mid \mathbf{x}_{0:T})}{p(\mathbf{y}_{0:T})}"
             tag="Bayes (4)"
+            size={26}
           />
           <EqBox
             tex="p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) \;\propto\; p(\mathbf{x}_0) \prod_{t=1}^{T} p(\mathbf{x}_t \mid \mathbf{x}_{t-1}) \prod_{t=0}^{T} p(\mathbf{y}_t \mid \mathbf{x}_t)"
             tag="Markov + local obs (7)"
+            size={26}
           />
         </div>
       </Step>
@@ -533,7 +666,7 @@ const Bayesian: Page = () => (
           <EqBox
             tex="\log p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) = -\tfrac{1}{2}\Big( \|\mathbf{x}_0 - \mathbf{x}^B\|^2_{\boldsymbol{\Sigma}_B^{-1}} + \sum_{t=1}^{T} \|\mathbf{x}_t - \mathcal{M}(\mathbf{x}_{t-1})\|^2_{\boldsymbol{\Sigma}_\epsilon^{-1}} + \sum_{t=0}^{T} \|\mathbf{y}_t - \mathcal{H}_t(\mathbf{x}_t)\|^2_{\boldsymbol{\Sigma}_{\boldsymbol{\eta}_t}^{-1}} \Big) + C"
             tag="log-posterior (8)"
-            size={21}
+            size={26}
           />
         </div>
       </Step>
@@ -625,8 +758,8 @@ const Adjoint: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="05" text="Why 4D-Var was hard" />
     <Heading>
-      Gradient descent needs <Tex tex="\mathrm{d}\mathcal{M}/\mathrm{d}\mathbf{x}" display={false} />
-      , historically derived by hand
+      <Tex tex="\mathrm{d}\mathcal{M}/\mathrm{d}\mathbf{x}" display={false} /> was derived by
+      hand — until now
     </Heading>
     <Steps>
       <Step>
@@ -701,17 +834,15 @@ const Autodiff: Page = () => (
     <h2
       style={{
         fontFamily: 'var(--osd-font-display)',
-        fontSize: 72,
+        fontSize: 60,
         fontWeight: 500,
         letterSpacing: '-0.02em',
         lineHeight: 1.12,
         margin: '20px 0 0',
-        maxWidth: 1560,
+        whiteSpace: 'nowrap',
       }}
     >
-      Write <Tex tex="\mathcal{M}" display={false} /> in an autodiff framework —
-      <br />
-      the adjoint comes for free
+      Write <Tex tex="\mathcal{M}" display={false} /> in an autodiff framework — the adjoint is free
     </h2>
     <div style={{ display: 'flex', gap: 56, marginTop: 52 }}>
       <div style={{ flex: 1 }}>
@@ -890,7 +1021,7 @@ const Architecture: Page = () => {
     <div style={{ ...page }}>
       <RepoBadge />
       <SectionLabel n="09" text="Part II · The toolbox" />
-      <Heading>One package, five composable concerns</Heading>
+      <Heading>One package, five composable parts</Heading>
       <div
         style={{
           display: 'grid',
@@ -937,7 +1068,7 @@ const StateSlide: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="10" text="The core data structure" />
     <Heading>
-      <span style={{ fontFamily: MONO }}>State</span> — named fields, two shared axes
+      <span style={{ fontFamily: MONO }}>State</span>: named fields, two axes
     </Heading>
     <div style={{ display: 'flex', gap: 52, marginTop: 36 }}>
       <div style={{ flex: 1.25, display: 'flex', flexDirection: 'column', gap: 26 }}>
@@ -993,7 +1124,7 @@ const StateSlide: Page = () => (
 const ObsAndDynamics: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="11" text="Plugging the problem in" />
-    <Heading>Observation operators &amp; the dynamics contract</Heading>
+    <Heading>Observation operators &amp; dynamics contracts</Heading>
     <div style={{ display: 'flex', gap: 48, marginTop: 36 }}>
       <div style={{ flex: 1.15, display: 'flex', flexDirection: 'column', gap: 26 }}>
         <Code
@@ -1106,7 +1237,7 @@ const EndToEnd: Page = () => (
 const VariationalZoo: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="13" text="Scaling &amp; interop" />
-    <Heading>Long windows, sliding windows, and a JAX bridge</Heading>
+    <Heading>Long windows, sliding windows, a JAX bridge</Heading>
     <div style={{ display: 'flex', gap: 48, marginTop: 36 }}>
       <div style={{ flex: 1.15, display: 'flex', flexDirection: 'column', gap: 26 }}>
         <Code
@@ -1240,7 +1371,7 @@ const Notebooks: Page = () => {
 const ExperimentL96: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="15" text="Paper experiment" />
-    <Heading>When the model is wrong, the weak constraint wins</Heading>
+    <Heading>Wrong model? The weak constraint wins</Heading>
     <div style={{ marginTop: 24 }}>
       <img
         src={figL964dvar}
@@ -1248,28 +1379,24 @@ const ExperimentL96: Page = () => (
         style={{ width: '100%', height: 'auto', border: '1px solid #dfe7eb' }}
       />
       <FigCaption>
-        Lorenz-96 (n=40, F=8): 10 of 40 variables observed per step, noise sd 1. Vertical line =
-        end of observations assimilated by sc-4D-Var. Figure: Frion et al., CC BY 4.0.
+        L96 (n=40, F=8), 10/40 variables observed per step, noise sd 1 · Figure: Frion et al., CC
+        BY 4.0
       </FigCaption>
     </div>
-    <div style={{ display: 'flex', gap: 40, marginTop: 20 }}>
+    <div style={{ display: 'flex', gap: 44, marginTop: 16 }}>
       <Col>
         <Bullet>
-          <b>Strong-constraint</b>, 100-step window: sharp analysis, then forecast error grows
-          exponentially past the obs
+          <b>Strong constraint</b>: sharp analysis, then forecast error blows up past the obs
         </Bullet>
       </Col>
       <Col>
         <Bullet>
-          <b>Weak-constraint</b>, 800-step window: the model-error term absorbs the mismatch; error
-          stays low throughout
+          <b>Weak constraint</b>: model-error term absorbs the mismatch; error stays low
         </Bullet>
       </Col>
       <Col>
         <Bullet>
-          One-step formulation{' '}
-          <Tex tex="\|\mathbf{x}_t - \mathcal{M}(\mathbf{x}_{t-1})\|" display={false} /> keeps the
-          cost parallel over time
+          One-step form keeps the cost <b>parallel over time</b>
         </Bullet>
       </Col>
     </div>
@@ -1277,71 +1404,137 @@ const ExperimentL96: Page = () => (
   </div>
 );
 
-const ExperimentSuite: Page = () => {
-  const Panel = ({ img, caption, aspect }: { img: string; caption: string; aspect: number }) => (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div
-        style={{
-          width: '100%',
-          aspectRatio: `${aspect}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '1px solid #dfe7eb',
-          overflow: 'hidden',
-        }}
-      >
-        <img
-          src={img}
-          alt={caption}
-          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-        />
-      </div>
-      <p style={{ fontSize: 22, lineHeight: 1.35, color: MUTED, margin: '10px 0 0' }}>{caption}</p>
+/* One figure per page — the experiment suite, split for readability. */
+
+const FigPage = ({
+  n,
+  img,
+  title,
+  caption,
+  aspect,
+  bullets,
+}: {
+  n: string;
+  img: string;
+  title: string;
+  caption: string;
+  aspect: number;
+  bullets: React.ReactNode[];
+}) => (
+  <div style={{ ...page }}>
+    <SectionLabel n={n} text="Paper experiments" />
+    <Heading>{title}</Heading>
+    <div
+      style={{
+        width: '100%',
+        aspectRatio: `${aspect}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px solid #dfe7eb',
+        overflow: 'hidden',
+        marginTop: 24,
+      }}
+    >
+      <img
+        src={img}
+        alt={title}
+        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+      />
     </div>
-  );
-  return (
-    <div style={{ ...page }}>
-      <SectionLabel n="16" text="Paper experiments" />
-      <Heading>From operational-scale flows to learned models</Heading>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: 28,
-          marginTop: 32,
-        }}
-      >
-        <Panel
-          img={figQG}
-          caption="3-layer QG, 769×961 grid: sliding-window sc-4D-Var assimilates 0.5% of variables over ~21 days (Adam + cyclic LR, one A100)."
-          aspect={1273 / 430}
-        />
-        <Panel
-          img={figEmulator}
-          caption="Kolmogorov flow: a Fourier Neural Operator replaces the simulator; 4D-Var runs through the emulator."
-          aspect={4590 / 1150}
-        />
-        <Panel
-          img={figLDA}
-          caption="Latent DA on 1-D KS: optimize in the β-VAE latent space (c_proj); the background prior lives in latent coordinates."
-          aspect={4550 / 1450}
-        />
-        <Panel
-          img={figExponaxKS}
-          caption="2-D KS solved in JAX (Exponax): the bridge feeds gradients back to PyTorch — 4D-Var across frameworks."
-          aspect={3908 / 700}
-        />
-      </div>
-      <p style={{ fontSize: 25, color: MUTED, margin: '24px 0 0' }}>
-        Also in the paper: EnKF vs EnKS on L96, irregular observation times, two-timescale L96 with
-        joint inference of unobserved fast variables, GOTM tracer with real forcing fields. Figures:
-        Frion et al., CC BY 4.0.
-      </p>
-      <Footer />
+    <FigCaption>{caption}</FigCaption>
+    <div style={{ display: 'flex', gap: 44, marginTop: 14 }}>
+      {bullets.map((b, i) => (
+        <Col key={i}>{b}</Col>
+      ))}
     </div>
-  );
-};
+    <Footer />
+  </div>
+);
+
+const ExperimentQG: Page = () => (
+  <FigPage
+    n="16"
+    img={figQG}
+    title="3-layer quasi-geostrophic ocean"
+    caption="769×961 grid, 5 km resolution · 0.5% of variables observed over ~21 days · sliding-window sc-4D-Var, Adam + cyclic LR, one A100 · Figure: Frion et al., CC BY 4.0"
+    aspect={1273 / 430}
+    bullets={[
+      <Bullet key="a">
+        The <b>operational-scale</b> flagship: 2.2M state variables per layer
+      </Bullet>,
+      <Bullet key="b">
+        Analysis errors 1–2 orders below the state; RMSE stays under obs noise for &gt;20 000
+        forecast steps
+      </Bullet>,
+      <Bullet key="c">
+        Sub-window handoffs visible every 500 steps — each analysis seeds the next background
+      </Bullet>,
+    ]}
+  />
+);
+
+const ExperimentEmulator: Page = () => (
+  <FigPage
+    n="17"
+    img={figEmulator}
+    title="4D-Var through a neural emulator"
+    caption="Kolmogorov flow: a Fourier Neural Operator replaces the simulator · sliding-window sc-4D-Var, 5% observed, noise sd 1 · Figure: Frion et al., CC BY 4.0"
+    aspect={4590 / 1150}
+    bullets={[
+      <Bullet key="a">
+        <b>Emulators unlock variational DA</b> when simulators lack gradients
+      </Bullet>,
+      <Bullet key="b">
+        Trained on coarsened DNS states — differentiable <i>by design</i>
+      </Bullet>,
+      <Bullet key="c">
+        Assimilated trajectory tracks groundtruth; the raw initialization decorrelates entirely
+      </Bullet>,
+    ]}
+  />
+);
+
+const ExperimentLDA: Page = () => (
+  <FigPage
+    n="18"
+    img={figLDA}
+    title="Latent data assimilation"
+    caption="1-D Kuramoto-Sivashinsky: optimize the latent initial state z of a β-VAE via c_proj · background prior N(0, I) in latent space · Figure: Frion et al., CC BY 4.0"
+    aspect={4550 / 1350}
+    bullets={[
+      <Bullet key="a">
+        <b>Latent DA</b>: lower dimension, cheaper storage, softer prior
+      </Bullet>,
+      <Bullet key="b">
+        The decoder acts as a <b>prior toward the data manifold</b>
+      </Bullet>,
+      <Bullet key="c">
+        LDA + prior &gt; LDA without &gt; encode-decode rollout &gt; naive rollout — all diverge
+        after ~400 chaotic steps
+      </Bullet>,
+    ]}
+  />
+);
+
+const ExperimentJAX: Page = () => (
+  <FigPage
+    n="19"
+    img={figExponaxKS}
+    title="Across frameworks: JAX dynamics, PyTorch 4D-Var"
+    caption="2-D Kuramoto-Sivashinsky solved with Exponax (JAX spectral solver) · bridge: jax.vjp + dlpack zero-copy · 25% observed, 16 steps, noise sd 1 · Figure: Frion et al., CC BY 4.0"
+    aspect={3908 / 650}
+    bullets={[
+      <Bullet key="a">
+        <b>Bring your own JAX solver</b> — wrapped as a PyTorch autograd op
+      </Bullet>,
+      <Bullet key="b">Small overhead vs native PyTorch; zero re-implementation</Bullet>,
+      <Bullet key="c">
+        Also in the paper: EnKF vs EnKS, irregular obs times, two-timescale L96, GOTM tracer
+      </Bullet>,
+    ]}
+  />
+);
 
 const Landscape: Page = () => {
   const Row = ({
@@ -1397,8 +1590,8 @@ const Landscape: Page = () => {
   );
   return (
     <div style={{ ...page }}>
-      <SectionLabel n="17" text="Ecosystem" />
-      <Heading>General-purpose DA packages — what's missing</Heading>
+      <SectionLabel n="20" text="Ecosystem" />
+      <Heading>General-purpose DA packages: what's missing</Heading>
       <div style={{ marginTop: 36 }}>
         <div
           style={{
@@ -1437,7 +1630,7 @@ const Landscape: Page = () => {
 
 const Takeaways: Page = () => (
   <div style={{ ...page }}>
-    <SectionLabel n="18" text="Takeaways" />
+    <SectionLabel n="21" text="Takeaways" />
     <Heading>What I'd like you to remember</Heading>
     <div style={{ display: 'flex', gap: 56, marginTop: 48 }}>
       <div style={{ flex: 1.2 }}>
@@ -1511,7 +1704,7 @@ const Takeaways: Page = () => (
     >
       arXiv:2608.23297 · GITHUB.COM/M-DML/ADDA · M-DML.ORG/ADDA
     </div>
-    <Footer />
+    <PageNumOnly />
   </div>
 );
 
@@ -1537,7 +1730,10 @@ export default [
   VariationalZoo,
   Notebooks,
   ExperimentL96,
-  ExperimentSuite,
+  ExperimentQG,
+  ExperimentEmulator,
+  ExperimentLDA,
+  ExperimentJAX,
   Landscape,
   Takeaways,
 ] satisfies Page[];
