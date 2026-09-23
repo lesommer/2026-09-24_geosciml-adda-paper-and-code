@@ -146,13 +146,13 @@ const RepoBadge = ({ light }: { light?: boolean }) => (
       textDecoration: 'none',
     }}
   >
-    <svg width={92} height={92} viewBox="0 0 16 16" fill={light ? '#f2fbfd' : 'var(--osd-text)'}>
+    <svg width={68} height={68} viewBox="0 0 16 16" fill={light ? '#f2fbfd' : 'var(--osd-text)'}>
       <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
     </svg>
     <span
       style={{
         fontFamily: MONO,
-        fontSize: 52,
+        fontSize: 38,
         color: light ? '#f2fbfd' : 'var(--osd-text)',
       }}
     >
@@ -177,8 +177,6 @@ const Footer = () => {
         letterSpacing: '0.06em',
       }}
     >
-      {/* @slide-comment id="c-688e20cc" ts="2026-09-22T22:29:17.815Z" text="eyJub3RlIjoicmVtb3ZlIGZyb20gdGhlIHBhZ2UifQ" */}
-      <span>GEOSCIML DISCUSSION GROUP · 24 SEP 2026</span>
       <span>
         {String(current).padStart(2, '0')} / {String(total).padStart(2, '0')}
       </span>
@@ -197,6 +195,20 @@ const Col = ({ children }: { children: React.ReactNode }) => (
   <ul style={{ margin: 0, padding: 0, listStyle: 'none', flex: 1 }}>{children}</ul>
 );
 
+const Content = ({ children }: { children: React.ReactNode }) => (
+  <div
+    style={{
+      flex: 1,
+      minHeight: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }}
+  >
+    {children}
+  </div>
+);
+
 const FigCaption = ({ children }: { children: React.ReactNode }) => (
   <p
     style={{
@@ -206,6 +218,8 @@ const FigCaption = ({ children }: { children: React.ReactNode }) => (
       margin: '12px 0 0',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
+      textAlign: 'center',
+      flexShrink: 0,
     }}
   >
     {children}
@@ -504,11 +518,10 @@ const Cover: Page = () => (
         maxWidth: 1620,
       }}
     >
-      {/* @slide-comment id="c-5a62d708" ts="2026-09-22T22:28:58.409Z" text="eyJub3RlIjoiXCJkaWZmZXJlbnRpYWJsZVwiIGluIHRoZSBzY2hlbWUgYmx1ZSAoc2FtZSBhcyB0aXRsZSkifQ" */}
       ADDA
       <span style={{ fontSize: 44, color: MUTED, fontWeight: 400 }}> — </span>
       end-to-end{' '}
-      <span style={{ color: '#1e9e5a' }}>differentiable</span>
+      <span style={{ color: 'var(--osd-accent)' }}>differentiable</span>
       <br />
       data assimilation
     </h1>
@@ -537,6 +550,7 @@ const Why: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="01" text="Motivation" />
     <Heading>Data assimilation works — porting it doesn't</Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 56, marginTop: 48 }}>
       <div style={{ flex: 1 }}>
         <div
@@ -554,30 +568,55 @@ const Why: Page = () => (
         <Bullet>Tune simulation parameters; detect model–data conflicts</Bullet>
         <Bullet>A workhorse of operational geoscience — computationally heavy</Bullet>
       </div>
-      <div
-        style={{
-          flex: 1,
-          background: TEAL_SOFT,
-          padding: '36px 40px',
-          borderLeft: '5px solid var(--osd-accent)',
-        }}
-      >
-        <div
-          style={{
-            fontFamily: MONO,
-            fontSize: 20,
-            color: 'var(--osd-accent)',
-            letterSpacing: '0.14em',
-            marginBottom: 24,
-          }}
-        >
-          WHY YET ANOTHER FRAMEWORK?
-        </div>
-        <Bullet>Simulation &amp; assimilation codes rarely interoperate</Bullet>
-        <Bullet>Discretizations, staggering, obs sampling hard-wired</Bullet>
-        <Bullet>Methods specialized to one model; comparisons costly</Bullet>
-        <Bullet>Limited autodiff &amp; parallel support inside simulators</Bullet>
+      <div style={{ flex: 1 }}>
+        <Steps>
+          <Step>
+            <div
+              style={{
+                background: TEAL_SOFT,
+                padding: '36px 40px',
+                borderLeft: '5px solid var(--osd-accent)',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 20,
+                  color: 'var(--osd-accent)',
+                  letterSpacing: '0.14em',
+                  marginBottom: 24,
+                }}
+              >
+                WHY YET ANOTHER FRAMEWORK?
+              </div>
+              <Bullet>Simulation &amp; assimilation codes rarely interoperate</Bullet>
+              <Bullet>Discretizations, staggering, obs sampling hard-wired</Bullet>
+              <Bullet>Methods specialized to one model; comparisons costly</Bullet>
+              <Bullet>Limited autodiff &amp; parallel support inside simulators</Bullet>
+            </div>
+          </Step>
+        </Steps>
       </div>
+    </div>
+    </Content>
+    <div
+      style={{
+        position: 'absolute',
+        left: 120,
+        bottom: 96,
+        maxWidth: 820,
+        background: TEAL_SOFT,
+        borderLeft: '5px solid var(--osd-accent)',
+        padding: '20px 28px',
+      }}
+    >
+      <span style={{ fontFamily: MONO, fontSize: 26, fontWeight: 600, color: TEAL_DARK }}>
+        ADDA
+      </span>
+      <span style={{ fontSize: 26, color: 'var(--osd-text)' }}>
+        {' '}
+        — a modular framework for simulating dynamical systems and evaluating DA methods
+      </span>
     </div>
     <Footer />
   </div>
@@ -587,6 +626,7 @@ const DAFormulation: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="02" text="The DA task" />
     <Heading>State-space model with Gaussian noise</Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 48, marginTop: 44 }}>
       <div style={{ flex: 1.3, display: 'flex', flexDirection: 'column', gap: 28 }}>
         <EqBox
@@ -638,6 +678,7 @@ const DAFormulation: Page = () => (
         </Steps>
       </div>
     </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -646,32 +687,33 @@ const Bayesian: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="03" text="Bayesian formulation" />
     <Heading>The answer is a posterior over trajectories</Heading>
+    <Content>
     <Steps>
       <Step>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 22, marginTop: 40 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 24 }}>
           <EqBox
             tex="p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) \;=\; \frac{p(\mathbf{x}_{0:T})\, p(\mathbf{y}_{0:T} \mid \mathbf{x}_{0:T})}{p(\mathbf{y}_{0:T})}"
             tag="Bayes (4)"
-            size={26}
+            size={24}
           />
           <EqBox
             tex="p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) \;\propto\; p(\mathbf{x}_0) \prod_{t=1}^{T} p(\mathbf{x}_t \mid \mathbf{x}_{t-1}) \prod_{t=0}^{T} p(\mathbf{y}_t \mid \mathbf{x}_t)"
             tag="Markov + local obs (7)"
-            size={26}
+            size={24}
           />
         </div>
       </Step>
       <Step>
-        <div style={{ marginTop: 22 }}>
+        <div style={{ marginTop: 14 }}>
           <EqBox
             tex="\log p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) = -\tfrac{1}{2}\Big( \|\mathbf{x}_0 - \mathbf{x}^B\|^2_{\boldsymbol{\Sigma}_B^{-1}} + \sum_{t=1}^{T} \|\mathbf{x}_t - \mathcal{M}(\mathbf{x}_{t-1})\|^2_{\boldsymbol{\Sigma}_\epsilon^{-1}} + \sum_{t=0}^{T} \|\mathbf{y}_t - \mathcal{H}_t(\mathbf{x}_t)\|^2_{\boldsymbol{\Sigma}_{\boldsymbol{\eta}_t}^{-1}} \Big) + C"
             tag="log-posterior (8)"
-            size={26}
+            size={21}
           />
         </div>
       </Step>
       <Step>
-        <div style={{ display: 'flex', gap: 36, marginTop: 30 }}>
+        <div style={{ display: 'flex', gap: 36, marginTop: 20 }}>
           <Col>
             <Bullet>
               <b>Markov + local obs</b> — the posterior factorizes, so algorithms can work locally
@@ -680,8 +722,8 @@ const Bayesian: Page = () => (
           </Col>
           <Col>
             <Bullet>
-              <b>Gaussians in</b> — the log-posterior is a sum of three <b>weighted norms</b>:
-              prior, model, observations.
+              <b>Gaussians in</b> — the log-posterior is a sum of three <b>terms</b>: prior, model,
+              obs.
             </Bullet>
           </Col>
           <Col>
@@ -693,6 +735,7 @@ const Bayesian: Page = () => (
         </div>
       </Step>
     </Steps>
+    </Content>
     <Footer />
   </div>
 );
@@ -701,6 +744,7 @@ const MapToVar: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="04" text="From Bayes to variational" />
     <Heading>4D-Var = MAP estimation of the posterior</Heading>
+    <Content>
     <Steps>
       <Step>
         <div style={{ marginTop: 40 }}>
@@ -750,6 +794,7 @@ const MapToVar: Page = () => (
         </div>
       </Step>
     </Steps>
+    </Content>
     <Footer />
   </div>
 );
@@ -761,12 +806,14 @@ const Adjoint: Page = () => (
       <Tex tex="\mathrm{d}\mathcal{M}/\mathrm{d}\mathbf{x}" display={false} /> was derived by
       hand — until now
     </Heading>
+    <Content>
     <Steps>
       <Step>
         <div style={{ marginTop: 40 }}>
           <EqBox
             tex="\nabla_{\mathbf{x}_0} J = \boldsymbol{\Sigma}_B^{-1}(\mathbf{x}_0 - \mathbf{x}^B) - \sum_{t=0}^{T} (\mathbf{M}^{\intercal})^{t}\, \mathbf{H}_t^{\intercal}\, \boldsymbol{\Sigma}_{\boldsymbol{\eta}}^{-1} \big(\mathbf{y}_t - \mathcal{H}_t(\mathbf{x}_t)\big)"
             tag="adjoint gradient (11)"
+            size={32}
           />
         </div>
       </Step>
@@ -809,12 +856,13 @@ const Adjoint: Page = () => (
               <b>Ensemble</b>: gradient-free, but covariances from few members
             </Bullet>
             <Bullet>
-              Hand-written adjoints: one per model, years of effort, fragile to model changes
+              Hand-written adjoints: one per model, requires work, fragile to model changes
             </Bullet>
           </div>
         </div>
       </Step>
     </Steps>
+    </Content>
     <Footer />
   </div>
 );
@@ -844,6 +892,7 @@ const Autodiff: Page = () => (
     >
       Write <Tex tex="\mathcal{M}" display={false} /> in an autodiff framework — the adjoint is free
     </h2>
+    <Content>
     <div style={{ display: 'flex', gap: 56, marginTop: 52 }}>
       <div style={{ flex: 1 }}>
         <Steps>
@@ -871,34 +920,39 @@ const Autodiff: Page = () => (
         </Steps>
       </div>
       <div style={{ flex: 1 }}>
-        <div
-          style={{
-            border: '1px solid rgba(194, 240, 248, 0.35)',
-            padding: '32px 36px',
-          }}
-        >
-          <div
-            style={{
-              fontFamily: MONO,
-              fontSize: 20,
-              color: TEAL_CY,
-              letterSpacing: '0.14em',
-              marginBottom: 24,
-            }}
-          >
-            WHAT IF <Tex tex="\mathcal{M}" display={false} /> IS NOT DIFFERENTIABLE?
-          </div>
-          <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 18px', color: '#dbeff5' }}>
-            <b style={{ color: '#fff' }}>Differentiable physics</b> — port the model to PyTorch /
-            JAX; repeatedly proven feasible (a 10-system library ships with ADDA).
-          </p>
-          <p style={{ fontSize: 29, lineHeight: 1.55, margin: 0, color: '#dbeff5' }}>
-            <b style={{ color: '#fff' }}>Neural emulator</b> — learn a differentiable surrogate, then
-            run 4D-Var through it.
-          </p>
-        </div>
+        <Steps>
+          <Step>
+            <div
+              style={{
+                border: '1px solid rgba(194, 240, 248, 0.35)',
+                padding: '32px 36px',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 20,
+                  color: TEAL_CY,
+                  letterSpacing: '0.14em',
+                  marginBottom: 24,
+                }}
+              >
+                WHAT IF <Tex tex="\mathcal{M}" display={false} /> IS NOT DIFFERENTIABLE?
+              </div>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 18px', color: '#dbeff5' }}>
+                <b style={{ color: '#fff' }}>Differentiable physics</b> — port the model to PyTorch
+                / JAX; repeatedly proven feasible (a 10-system library ships with ADDA).
+              </p>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: 0, color: '#dbeff5' }}>
+                <b style={{ color: '#fff' }}>Neural emulator</b> — learn a differentiable surrogate,
+                then run 4D-Var through it.
+              </p>
+            </div>
+          </Step>
+        </Steps>
       </div>
     </div>
+    </Content>
     <div style={{ position: 'absolute', left: 120, bottom: 40 }}>
       <span style={{ fontFamily: MONO, fontSize: 22, color: TEAL_CY, letterSpacing: '0.06em' }}>
         ADDA · AUTOMATIC DIFFERENTIATION FOR DATA ASSIMILATION
@@ -912,6 +966,7 @@ const Sequential: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="07" text="The other family" />
     <Heading>Sequential methods: filter as you go</Heading>
+    <Content>
     <p style={{ fontSize: 32, color: MUTED, margin: '30px 0 0', maxWidth: 1600, lineHeight: 1.5 }}>
       No window, no adjoint: alternate forecast and analysis one observation at a time, targeting
       the filtering distribution{' '}
@@ -954,6 +1009,7 @@ const Sequential: Page = () => (
       In ADDA: <Tag>EnKF</Tag> = <Tag>EnKS</Tag> with lag 1 — one code path, parallelized over the
       ensemble axis.
     </p>
+    </Content>
     <Footer />
   </div>
 );
@@ -966,6 +1022,7 @@ const Parameters: Page = () => (
       The Bayesian recipe is unchanged — only the control vector grows. Put a prior on parameters{' '}
       <Tex tex="\boldsymbol{\theta}" display={false} /> and minimize jointly with the state.
     </p>
+    <Content>
     <Steps>
       <Step>
         <div style={{ marginTop: 34 }}>
@@ -1000,6 +1057,7 @@ const Parameters: Page = () => (
         </div>
       </Step>
     </Steps>
+    </Content>
     <Footer />
   </div>
 );
@@ -1022,6 +1080,7 @@ const Architecture: Page = () => {
       <RepoBadge />
       <SectionLabel n="09" text="Part II · The toolbox" />
       <Heading>One package, five composable parts</Heading>
+      <Content>
       <div
         style={{
           display: 'grid',
@@ -1059,6 +1118,7 @@ const Architecture: Page = () => {
         Plus <b>10 differentiable dynamical systems</b> (L63, L96 ×2, KdV, KS ×2, Kolmogorov flow,
         QG, tracer, GOTM column) and 15 runnable notebooks.
       </p>
+      </Content>
       <Footer />
     </div>
   );
@@ -1070,6 +1130,7 @@ const StateSlide: Page = () => (
     <Heading>
       <span style={{ fontFamily: MONO }}>State</span>: named fields, two axes
     </Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 52, marginTop: 36 }}>
       <div style={{ flex: 1.25, display: 'flex', flexDirection: 'column', gap: 26 }}>
         <Code
@@ -1117,6 +1178,7 @@ const StateSlide: Page = () => (
         </Steps>
       </div>
     </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -1125,6 +1187,7 @@ const ObsAndDynamics: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="11" text="Plugging the problem in" />
     <Heading>Observation operators &amp; dynamics contracts</Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 48, marginTop: 36 }}>
       <div style={{ flex: 1.15, display: 'flex', flexDirection: 'column', gap: 26 }}>
         <Code
@@ -1174,6 +1237,7 @@ const ObsAndDynamics: Page = () => (
         </Steps>
       </div>
     </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -1182,6 +1246,7 @@ const EndToEnd: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="12" text="The whole workflow" />
     <Heading>4D-Var on Lorenz-63 in five moves</Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 52, marginTop: 36 }}>
       <div style={{ flex: 1.3 }}>
         <Code
@@ -1230,6 +1295,7 @@ const EndToEnd: Page = () => (
         </Steps>
       </div>
     </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -1238,6 +1304,7 @@ const VariationalZoo: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="13" text="Scaling &amp; interop" />
     <Heading>Long windows, sliding windows, a JAX bridge</Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 48, marginTop: 36 }}>
       <div style={{ flex: 1.15, display: 'flex', flexDirection: 'column', gap: 26 }}>
         <Code
@@ -1286,6 +1353,7 @@ const VariationalZoo: Page = () => (
         </Steps>
       </div>
     </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -1314,6 +1382,7 @@ const Notebooks: Page = () => {
       <RepoBadge />
       <SectionLabel n="14" text="Try it yourself" />
       <Heading>15 runnable notebooks, five families</Heading>
+      <Content>
       <div
         style={{
           display: 'grid',
@@ -1363,6 +1432,7 @@ const Notebooks: Page = () => {
           </p>
         </div>
       </div>
+      </Content>
       <Footer />
     </div>
   );
@@ -1372,11 +1442,12 @@ const ExperimentL96: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="15" text="Paper experiment" />
     <Heading>Wrong model? The weak constraint wins</Heading>
-    <div style={{ marginTop: 24 }}>
+    <Content>
+    <div style={{ marginTop: 16 }}>
       <img
         src={figL964dvar}
         alt="L96 strong vs weak constraint 4D-Var"
-        style={{ width: '100%', height: 'auto', border: '1px solid #dfe7eb' }}
+        style={{ width: '100%', maxHeight: 535, objectFit: 'contain', display: 'block', margin: '0 auto' }}
       />
       <FigCaption>
         L96 (n=40, F=8), 10/40 variables observed per step, noise sd 1 · Figure: Frion et al., CC
@@ -1400,6 +1471,7 @@ const ExperimentL96: Page = () => (
         </Bullet>
       </Col>
     </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -1411,43 +1483,36 @@ const FigPage = ({
   img,
   title,
   caption,
-  aspect,
   bullets,
 }: {
   n: string;
   img: string;
   title: string;
   caption: string;
-  aspect: number;
   bullets: React.ReactNode[];
 }) => (
   <div style={{ ...page }}>
     <SectionLabel n={n} text="Paper experiments" />
     <Heading>{title}</Heading>
-    <div
-      style={{
-        width: '100%',
-        aspectRatio: `${aspect}`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '1px solid #dfe7eb',
-        overflow: 'hidden',
-        marginTop: 24,
-      }}
-    >
+    <Content>
       <img
         src={img}
         alt={title}
-        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+        style={{
+          width: '100%',
+          maxHeight: 535,
+          objectFit: 'contain',
+          display: 'block',
+          margin: '0 auto',
+        }}
       />
-    </div>
-    <FigCaption>{caption}</FigCaption>
-    <div style={{ display: 'flex', gap: 44, marginTop: 14 }}>
-      {bullets.map((b, i) => (
-        <Col key={i}>{b}</Col>
-      ))}
-    </div>
+      <FigCaption>{caption}</FigCaption>
+      <div style={{ display: 'flex', gap: 44, marginTop: 14, flexShrink: 0 }}>
+        {bullets.map((b, i) => (
+          <Col key={i}>{b}</Col>
+        ))}
+      </div>
+    </Content>
     <Footer />
   </div>
 );
@@ -1458,7 +1523,6 @@ const ExperimentQG: Page = () => (
     img={figQG}
     title="3-layer quasi-geostrophic ocean"
     caption="769×961 grid, 5 km resolution · 0.5% of variables observed over ~21 days · sliding-window sc-4D-Var, Adam + cyclic LR, one A100 · Figure: Frion et al., CC BY 4.0"
-    aspect={1273 / 430}
     bullets={[
       <Bullet key="a">
         The <b>operational-scale</b> flagship: 2.2M state variables per layer
@@ -1480,7 +1544,6 @@ const ExperimentEmulator: Page = () => (
     img={figEmulator}
     title="4D-Var through a neural emulator"
     caption="Kolmogorov flow: a Fourier Neural Operator replaces the simulator · sliding-window sc-4D-Var, 5% observed, noise sd 1 · Figure: Frion et al., CC BY 4.0"
-    aspect={4590 / 1150}
     bullets={[
       <Bullet key="a">
         <b>Emulators unlock variational DA</b> when simulators lack gradients
@@ -1501,7 +1564,6 @@ const ExperimentLDA: Page = () => (
     img={figLDA}
     title="Latent data assimilation"
     caption="1-D Kuramoto-Sivashinsky: optimize the latent initial state z of a β-VAE via c_proj · background prior N(0, I) in latent space · Figure: Frion et al., CC BY 4.0"
-    aspect={4550 / 1350}
     bullets={[
       <Bullet key="a">
         <b>Latent DA</b>: lower dimension, cheaper storage, softer prior
@@ -1523,7 +1585,6 @@ const ExperimentJAX: Page = () => (
     img={figExponaxKS}
     title="Across frameworks: JAX dynamics, PyTorch 4D-Var"
     caption="2-D Kuramoto-Sivashinsky solved with Exponax (JAX spectral solver) · bridge: jax.vjp + dlpack zero-copy · 25% observed, 16 steps, noise sd 1 · Figure: Frion et al., CC BY 4.0"
-    aspect={3908 / 650}
     bullets={[
       <Bullet key="a">
         <b>Bring your own JAX solver</b> — wrapped as a PyTorch autograd op
@@ -1592,6 +1653,7 @@ const Landscape: Page = () => {
     <div style={{ ...page }}>
       <SectionLabel n="20" text="Ecosystem" />
       <Heading>General-purpose DA packages: what's missing</Heading>
+      <Content>
       <div style={{ marginTop: 36 }}>
         <div
           style={{
@@ -1623,6 +1685,7 @@ const Landscape: Page = () => {
         ADDA is explicitly <b>not a benchmark</b> — it is the substrate a fair community benchmark
         still needs.
       </p>
+      </Content>
       <Footer />
     </div>
   );
@@ -1632,19 +1695,21 @@ const Takeaways: Page = () => (
   <div style={{ ...page }}>
     <SectionLabel n="21" text="Takeaways" />
     <Heading>What I'd like you to remember</Heading>
+    <Content>
     <div style={{ display: 'flex', gap: 56, marginTop: 48 }}>
       <div style={{ flex: 1.2 }}>
         <Steps>
           <Step>
             <Bullet>
-              DA = <b>Bayes on trajectories</b>; variational and ensemble methods are two structured
-              approximations of the same posterior
+              DA = <b>Bayes on trajectories</b> — variational and ensemble methods approximate the
+              same posterior
             </Bullet>
           </Step>
           <Step>
             <Bullet>
-              Autodiff removes the historical pain of 4D-Var — the adjoint is now a{' '}
-              <span style={{ fontFamily: MONO }}>backward pass</span>, not years of hand-derivation
+              Autodiff removes the historical pain of 4D-Var — the adjoint{' '}
+              <b>doesn't need hand-derivation</b>, just a{' '}
+              <span style={{ fontFamily: MONO }}>backward pass</span>
             </Bullet>
           </Step>
           <Step>
@@ -1660,38 +1725,52 @@ const Takeaways: Page = () => (
           </Step>
         </Steps>
       </div>
-      <div
-        style={{
-          flex: 1,
-          background: TEAL_SOFT,
-          borderLeft: '5px solid var(--osd-accent)',
-          padding: '34px 38px',
-        }}
-      >
-        <div
-          style={{
-            fontFamily: MONO,
-            fontSize: 21,
-            color: 'var(--osd-accent)',
-            letterSpacing: '0.14em',
-            marginBottom: 24,
-          }}
-        >
-          FOR THE DISCUSSION
-        </div>
-        <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
-          Which of our group's models could be ported to differentiable physics — and which need an
-          emulator?
-        </p>
-        <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
-          What's our most-wanted joint state–parameter problem for{' '}
-          <Tex tex="F^s" display={false} />?
-        </p>
-        <p style={{ fontSize: 29, lineHeight: 1.55, margin: 0 }}>
-          Could ADDA host a GeoSciML benchmark of DA methods?
-        </p>
+      <div style={{ flex: 1 }}>
+        <Steps>
+          <Step>
+            <div
+              style={{
+                background: TEAL_SOFT,
+                borderLeft: '5px solid var(--osd-accent)',
+                padding: '34px 38px',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 21,
+                  color: 'var(--osd-accent)',
+                  letterSpacing: '0.14em',
+                  marginBottom: 24,
+                }}
+              >
+                FOR THE DISCUSSION
+              </div>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
+                How could we contribute to this package?
+              </p>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
+                Calibrating ocean vertical physics?
+              </p>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
+                What's our most-wanted joint state–parameter problem for{' '}
+                <Tex tex="F^s" display={false} />?
+              </p>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
+                Are there problems we are working on that could be deployed through ADDA?
+              </p>
+              <p style={{ fontSize: 29, lineHeight: 1.55, margin: 0 }}>
+                Could we use <span style={{ fontFamily: MONO }}>juliacall</span> and{' '}
+                <span style={{ fontFamily: MONO }}>DLPack.jl</span> inside a custom{' '}
+                <span style={{ fontFamily: MONO }}>torch.autograd.Function</span> and extend ADDA to
+                Julia solvers?
+              </p>
+            </div>
+          </Step>
+        </Steps>
       </div>
     </div>
+    </Content>
     <div
       style={{
         position: 'absolute',
