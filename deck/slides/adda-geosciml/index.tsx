@@ -87,7 +87,6 @@ const TopBar = ({ label }: { label: string }) => (
         textTransform: 'uppercase',
       }}
     >
-      {/* @slide-comment id="c-deedc5ab" ts="2026-09-23T21:59:31.955Z" text="eyJub3RlIjoicmVwbGFjZSB3aXRoIFwiSUdFIEdlb1NjaU1MIERpc2N1c3Npb24gR3JvdXBcIiJ9" */}
       {label}
     </div>
   </div>
@@ -496,7 +495,7 @@ const Cover: Page = () => (
       padding: '0 120px',
     }}
   >
-    <TopBar label="GeoSciML Discussion Group — Session" />
+    <TopBar label="IGE GeoSciML Discussion Group" />
     <div
       style={{
         fontFamily: MONO,
