@@ -87,6 +87,7 @@ const TopBar = ({ label }: { label: string }) => (
         textTransform: 'uppercase',
       }}
     >
+      {/* @slide-comment id="c-deedc5ab" ts="2026-09-23T21:59:31.955Z" text="eyJub3RlIjoicmVwbGFjZSB3aXRoIFwiSUdFIEdlb1NjaU1MIERpc2N1c3Npb24gR3JvdXBcIiJ9" */}
       {label}
     </div>
   </div>
@@ -610,10 +611,10 @@ const Why: Page = () => (
         padding: '20px 28px',
       }}
     >
-      <span style={{ fontFamily: MONO, fontSize: 26, fontWeight: 600, color: TEAL_DARK }}>
+      <span style={{ fontFamily: MONO, fontSize: 32, fontWeight: 600, color: TEAL_DARK }}>
         ADDA
       </span>
-      <span style={{ fontSize: 26, color: 'var(--osd-text)' }}>
+      <span style={{ fontSize: 32, color: 'var(--osd-text)' }}>
         {' '}
         — a modular framework for simulating dynamical systems and evaluating DA methods
       </span>
@@ -708,7 +709,7 @@ const Bayesian: Page = () => (
           <EqBox
             tex="\log p(\mathbf{x}_{0:T} \mid \mathbf{y}_{0:T}) = -\tfrac{1}{2}\Big( \|\mathbf{x}_0 - \mathbf{x}^B\|^2_{\boldsymbol{\Sigma}_B^{-1}} + \sum_{t=1}^{T} \|\mathbf{x}_t - \mathcal{M}(\mathbf{x}_{t-1})\|^2_{\boldsymbol{\Sigma}_\epsilon^{-1}} + \sum_{t=0}^{T} \|\mathbf{y}_t - \mathcal{H}_t(\mathbf{x}_t)\|^2_{\boldsymbol{\Sigma}_{\boldsymbol{\eta}_t}^{-1}} \Big) + C"
             tag="log-posterior (8)"
-            size={21}
+            size={24}
           />
         </div>
       </Step>
@@ -751,7 +752,7 @@ const MapToVar: Page = () => (
           <EqBox
             tex="\underset{\mathbf{x}_{0:T}}{\arg\min}\; J(\mathbf{x}_{0:T}) = \underset{\mathbf{x}_{0:T}}{\arg\min}\; \tfrac{1}{2}\Big( \|\mathbf{x}_0 - \mathbf{x}^B\|^2_{\boldsymbol{\Sigma}_B^{-1}} + \underbrace{\sum_{t=1}^{T} \|\mathbf{x}_t - \mathcal{M}(\mathbf{x}_{t-1})\|^2_{\boldsymbol{\Sigma}_\epsilon^{-1}}}_{\text{model error — weak constraint}} + \sum_{t=0}^{T} \|\mathbf{y}_t - \mathcal{H}_t(\mathbf{x}_t)\|^2_{\boldsymbol{\Sigma}_{\boldsymbol{\eta}_t}^{-1}} \Big)"
             tag="weak-constraint (9)"
-            size={18}
+            size={28}
           />
         </div>
       </Step>
@@ -1750,11 +1751,8 @@ const Takeaways: Page = () => (
                 How could we contribute to this package?
               </p>
               <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
-                Calibrating ocean vertical physics?
-              </p>
-              <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
-                What's our most-wanted joint state–parameter problem for{' '}
-                <Tex tex="F^s" display={false} />?
+                What's our most-wanted joint state–parameter problem — calibrating ocean vertical
+                physics?
               </p>
               <p style={{ fontSize: 29, lineHeight: 1.55, margin: '0 0 20px' }}>
                 Are there problems we are working on that could be deployed through ADDA?
